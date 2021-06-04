@@ -1,7 +1,9 @@
 package com.myspringapi.logistica.api.controller;
 
-import java.util.Arrays;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,20 +12,13 @@ import com.myspringapi.logistica.domain.model.Client;
 
 @RestController
 public class ClientController {
+	
+	@PersistenceContext
+	private EntityManager manager;
+	
 	@GetMapping("/clients")
 	public List<Client> show() {
-		Client client1 = new Client();
-		client1.setId(1L);
-		client1.setName("Cliente name");
-		client1.setEmail("clientoneemail@email.com");
-		client1.setPhone("55 44 333222111");
-		
-		Client client2 = new Client();
-		client2.setId(1L);
-		client2.setName("Cliente two name");
-		client2.setEmail("clientoneemail@email.com");
-		client2.setPhone("55 44 333222111");
-		
-		return Arrays.asList(client1, client2);
+		return manager.createQuery("from Client", Client.class)
+				.getResultList();
 	}
 }
